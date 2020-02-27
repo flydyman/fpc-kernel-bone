@@ -5,7 +5,8 @@
 # License:	Public domain
  
 NASMPARAMS = -f elf32 -o stub.o
-LDPARAMS = -A elf-i386 --gc-sections -s -Tlinker.script -o kernel.obj
+LDPARAMS = -melf_i386 --gc-sections -s -Tlinker.script -o kernel.obj
+FPCPARAMS = -Pi386 -Tlinux
 TMPISO = iso
 TMPBOOT = $(TMPISO)/boot
 TMPGRUB = $(TMPBOOT)/grub
@@ -14,15 +15,15 @@ TMPCFG  = $(TMPGRUB)/grub.cfg
 objects = stub.o kernel.o multiboot.o console.o system.o
  
 _FPC:
-	# Compile kernel
+	echo 'Compile kernel'
 	fpc $(FPCPARAMS) kernel.pas 
  
 _NASM:
-	# Compile stub
+	echo 'Compile stub'
 	nasm $(NASMPARAMS) stub.asm
  
 _LD:
-	# Link them together
+	echo 'Link them together'
 	ld $(LDPARAMS) $(objects)
  
 all: _FPC _NASM _LD
